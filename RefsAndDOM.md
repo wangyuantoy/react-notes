@@ -1,0 +1,73 @@
+## Refs and the DOM
+通常情况下`props`是组件与组件之间通信的唯一方式，然而有时候会遇到需要在`数据流`之外紧急修改一些`child`(`React component`也可能是`DOM`),为解决这些问题`React`提供了一个`escape hatch转义窗口`
+
+### 什么时候使用`refs`
+
+以下有几种很好的适用场景：
+- 管理文本框获取焦点、文本选择、媒体资源重放
+- 触发要立即执行的动画
+- 和三方DOM库合并
+
+但是一定要避免过度使用`refs`
+
+### 向`DOM`元素添加`ref`
+
+`React`支持向任何组件添加特殊的属性。`ref`接收一个回调函数，这个回调函数在组件`mount `或者`unmount`的时候立即执行。***当向`DOM元素`添加`ref`时，回调函数会把当前DOM元素当做参数传入***
+```js
+// 点击button时，input获取焦点
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.focus = this.focus.bind(this);
+  }
+
+  focus() {
+    this.textInput.focus();
+  }
+
+  render() {
+    // 参数input是当前元素本身
+    return (
+      <div>
+        <input
+          type="text"
+          ref={(input) => { this.textInput = input; }} />
+        <input
+          type="button"
+          value="Focus the text input"
+          onClick={this.focus}
+        />
+      </div>
+    );
+  }
+}
+```
+这个案例中其实可以通过获取`DOM`来避免使用`ref`
+```js
+class CustomTextInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.focus = this.focus.bind(this);
+    }
+
+    focus() {
+    // 通过原生DOM操作来实现
+        let inp=document.getElementsByClassName("input1")[0]
+        inp.focus()
+    }
+
+    render() {
+        return (
+            <div>
+                <input type="text" className="input1"/>
+                <input
+                    type="button"
+                    value="Focus the text input"
+                    onClick={this.focus}
+                />
+            </div>
+        );
+    }
+}
+```
+
