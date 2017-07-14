@@ -1,4 +1,5 @@
 # react-notes
-this is my react notes to write down know-how fragments, update anytime!
 
-React v15.5.4
+这是我的react中文翻译
+
+基于React v15.5.4
